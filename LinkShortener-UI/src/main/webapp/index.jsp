@@ -23,21 +23,32 @@
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <form method="post" action="/create/link">
-                <div class="form-group">
-                    <label>Url: <input class="form-control" type="text" placeholder="Enter Url..." name="longUrl"
-                                       id="longUrl">
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Expired date: <input class="form-control" type="date" name="expired-date" id="expired-date">
-                    </label>
-                </div>
 
                 <div class="form-group">
-                    <label>Your Desired Url: <input class="form-control" type="text" placeholder="Enter your choice Url..."
-                                                    name="desire_link" id="desire_link"> </label>
+
+                    <div class="form-group col-sm-6">
+                        <label for="longUrl">Url:</label>
+                        <input class="form-control" type="text" placeholder="Enter Url..." name="longUrl"
+                               id="longUrl">
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="desire_link">Your Desired Url:</label>
+                        <input class="form-control" type="text" placeholder="Enter your choice Url..."
+                               name="desire_link" id="desire_link">
+                    </div>
+
+                    <div class="form-group col-sm-3">
+                        <label for="expired-date">Expired date:</label>
+                        <input class="form-control" type="date" name="expired-date" id="expired-date">
+                    </div>
                 </div>
-                <button type="submit" class="btn btn-default">Make it Short!</button>
+                <div class="row">
+                    <div class="center">
+                        <button type="submit" class="btn btn-primary">Make it Short!</button>
+                    </div>
+                </div>
+
             </form>
         </div>
         <div class="col-md-2"></div>
