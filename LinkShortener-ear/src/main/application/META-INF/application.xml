@@ -18,5 +18,8 @@
             <context-root>/shorten</context-root>
         </web>
     </module>
+    <module>
+        <ejb>LinkShortener-ejb.jar</ejb>
+    </module>
 
 </application>

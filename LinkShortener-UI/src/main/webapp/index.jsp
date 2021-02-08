@@ -24,8 +24,8 @@
         <div class="col-md-8">
             <form method="post" action="/create/link">
                 <div class="form-group">
-                    <label>Url: <input class="form-control" type="text" placeholder="Enter Url..." name="link"
-                                       id="link">
+                    <label>Url: <input class="form-control" type="text" placeholder="Enter Url..." name="longUrl"
+                                       id="longUrl">
                     </label>
                 </div>
                 <div class="form-group">
@@ -34,7 +34,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Your Desired Url: <input class="form-control" type="text" placeholder="Enter Url..."
+                    <label>Your Desired Url: <input class="form-control" type="text" placeholder="Enter your choice Url..."
                                                     name="desire_link" id="desire_link"> </label>
                 </div>
                 <button type="submit" class="btn btn-default">Make it Short!</button>

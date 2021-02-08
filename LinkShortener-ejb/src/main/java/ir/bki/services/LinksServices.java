@@ -4,7 +4,7 @@ import ir.bki.dao.LinksDao;
 import ir.bki.dto.LinkDto;
 import ir.bki.entities.Links;
 import ir.bki.util.BaseConversion;
-import lombok.Data;
+import lombok.Getter;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -15,14 +15,19 @@ import javax.persistence.NoResultException;
 
 
 @Stateless
-@Data
+@Getter
 //@Singleton
 public class LinksServices {
 
     @Inject
-    private LinksDao linksDao;
+    public LinksDao linksDao;
+
     @Inject
-    private BaseConversion baseConversion;
+    public BaseConversion baseConversion;
+
+    public String sayHello() {
+        return "HELLO FROM LinksServices";
+    }
 
     public Links createLink(LinkDto linkDto) {
         Links links = new Links();
@@ -32,11 +37,13 @@ public class LinksServices {
         links.setExpiresDate(dateTime.toDate());
         links.setHttpStatusCode(303);
         links.setEnabled(true);
-        links.setCreatedDate(dateTime.toDate());
         Links response = linksDao.create(links);
-        links.setShortLink(baseConversion.encode(response.getId()));
+        String encodedLink = baseConversion.encode(response.getId());
+        if (linkDto.getDesirelink() != null) {
+            encodedLink = linkDto.getDesirelink();
+        }
+        links.setShortLink(encodedLink);
         return linksDao.getEm().merge(links);
-
     }
 
     public Links retrieveOne(long id) {
@@ -45,9 +52,29 @@ public class LinksServices {
             res = linksDao.getEm().createNamedQuery(Links.FIND_BY_ID, Links.class).setParameter("id", id).getSingleResult();
 
         } catch (NoResultException e) {
+            return null;
+        }
+        return res;
+    }
 
-                return null;
-//            throw new NotFoundException();
+    public Links longUrlAlreadyExist(String longUrl) {
+        Links res = null;
+        try {
+            res = (Links) linksDao.getEm()
+                    .createNamedQuery(Links.FIND_BY_LONG_URL)
+                    .setParameter("redirectLink", longUrl).getSingleResult();
+        } catch (Exception ignored) {
+        }
+        return res;
+    }
+
+    public Links shortUrlAlreadyExist(String shortUrl) {
+        Links res = null;
+        try {
+            res = (Links) linksDao.getEm()
+                    .createNamedQuery(Links.FIND_BY_SHORT_URL)
+                    .setParameter("shortLink", shortUrl).getSingleResult();
+        } catch (Exception ignored) {
         }
         return res;
     }

@@ -13,13 +13,15 @@ import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
 @Path("link")
-public class CreateEndPoint {
+public class ShortenerEndPoint {
     @Inject
     private LinksServices linksServices;
+
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String maintenance() {
+        System.err.println("#linksServices: " + linksServices.sayHello());
         return "CreateEndPoint...";
     }
 
@@ -27,18 +29,36 @@ public class CreateEndPoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response creteLink(
-            @FormParam("link") String link,
+            @FormParam("longUrl") String longUrl,
             @FormParam("expired-date") String expiredDate,
+            @FormParam("desire_link") String desirelink,
             @Context UriInfo uriInfo) {
-        System.out.println("link = " + link + ", expiredDate = " + expiredDate + ", uriInfo = " + uriInfo.getPath());
-        link = link.trim();
+        longUrl = longUrl.trim();
         expiredDate = expiredDate.trim();
-        if (link.length() > 0 && expiredDate.length() > 0) {
+
+        if (longUrl.length() > 0 && expiredDate.length() > 0) {
             LinkDto dto = new LinkDto();
-            dto.setLongLink(link);
+            dto.setLongLink(longUrl);
             dto.setExpiresDate(expiredDate);
 
-            Links links = alreadyExist(link);
+            Links links;
+
+            if (desirelink.length() > 0) {
+                desirelink = desirelink.trim();
+                dto.setDesirelink(desirelink);
+                links = linksServices.shortUrlAlreadyExist(desirelink);
+                if (links != null) {
+                    URI shortAddress = URI.create(uriInfo.getBaseUri().getScheme()
+                            + "://" +
+                            uriInfo.getBaseUri().getAuthority() +
+                            "/" + links.getShortLink());
+                    links.setShortLink(String.valueOf(shortAddress));
+                    return Response.created(shortAddress).entity(links).build();
+                }
+            }
+
+            links = linksServices.longUrlAlreadyExist(longUrl);
+
             if (links == null)
                 links = linksServices.createLink(dto);
 
@@ -48,18 +68,10 @@ public class CreateEndPoint {
                     "/" + links.getShortLink());
             links.setShortLink(String.valueOf(shortAddress));
             return Response.created(shortAddress).entity(links).build();
+
         }
         return Response.status(Response.Status.PRECONDITION_FAILED).build();
     }
 
-    private Links alreadyExist(String link) {
-        Links res = null;
-        try {
-            res = linksServices.getLinksDao().getEm()
-                    .createNamedQuery(Links.FIND_BY_LONG_URL, Links.class)
-                    .setParameter("redirectLink", link).getSingleResult();
-        } catch (Exception ignored) {
-        }
-        return res;
-    }
+
 }

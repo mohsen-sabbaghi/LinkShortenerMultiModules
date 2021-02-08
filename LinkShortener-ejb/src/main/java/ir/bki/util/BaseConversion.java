@@ -1,6 +1,9 @@
 package ir.bki.util;
 import lombok.var;
 
+import javax.ejb.Stateless;
+
+@Stateless
 public class BaseConversion {
 
     private static final String allowedString = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

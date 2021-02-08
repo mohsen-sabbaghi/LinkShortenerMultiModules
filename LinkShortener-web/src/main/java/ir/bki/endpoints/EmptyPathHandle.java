@@ -17,7 +17,6 @@ public class EmptyPathHandle {
 
     @GET
     public String handleEmpty() throws IOException {
-        System.err.println("##RequestURI: " + request.getRequestURI());
         if (request.getRequestURI().equals("") || request.getRequestURI().equals("/")) {
             response.sendRedirect("/shorten");
         }

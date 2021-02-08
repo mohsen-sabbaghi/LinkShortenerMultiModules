@@ -16,6 +16,7 @@ import java.util.Date;
         @NamedQuery(name = Links.FIND_ALL, query = "SELECT u FROM Links u ORDER BY u.id DESC"),
         @NamedQuery(name = Links.FIND_BY_ID, query = "SELECT u FROM Links u WHERE u.id = :id"),
         @NamedQuery(name = Links.FIND_BY_LONG_URL, query = "SELECT u FROM Links u WHERE u.redirectLink = :redirectLink"),
+        @NamedQuery(name = Links.FIND_BY_SHORT_URL, query = "SELECT u FROM Links u WHERE u.shortLink = :shortLink"),
         @NamedQuery(name = Links.COUNT_ALL, query = "SELECT COUNT(u) FROM Links u")
 })
 public class Links implements Serializable {
@@ -23,6 +24,7 @@ public class Links implements Serializable {
     public static final String COUNT_ALL = "Links.countAll";
     public static final String FIND_BY_ID = "Links.findById";
     public static final String FIND_BY_LONG_URL = "Links.findByLongUrl";
+    public static final String FIND_BY_SHORT_URL = "Links.findByShortUrl";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,14 +48,19 @@ public class Links implements Serializable {
     private Date createdDate;
 
     @Column(name = "EXPIRED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date expiresDate;
 
     @Column(name = "ACTIVATED_AT")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Date activatedDate;
 
-    @Size(max = 4000)
-    @Column(name = "DESCRIPTION", length = 4000)
+    @Size(max = 400)
+    @Column(name = "DESCRIPTION", length = 400)
     private String description;
+
+    @PrePersist
+    public void prePersist(){
+        setCreatedDate(new Date());
+    }
 }
