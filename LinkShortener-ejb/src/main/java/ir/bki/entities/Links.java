@@ -1,13 +1,16 @@
 package ir.bki.entities;
 
 
+import ir.bki.util.serializer.GsonModel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "TB_Links", uniqueConstraints = {@UniqueConstraint(columnNames = {"REDIRECT_LINK"})})
 @Cacheable(false)
@@ -19,7 +22,7 @@ import java.util.Date;
         @NamedQuery(name = Links.FIND_BY_SHORT_URL, query = "SELECT u FROM Links u WHERE u.shortLink = :shortLink"),
         @NamedQuery(name = Links.COUNT_ALL, query = "SELECT COUNT(u) FROM Links u")
 })
-public class Links implements Serializable {
+public class Links extends GsonModel implements Serializable {
     public static final String FIND_ALL = "Links.findAll";
     public static final String COUNT_ALL = "Links.countAll";
     public static final String FIND_BY_ID = "Links.findById";

@@ -2,6 +2,7 @@ package ir.bki.config;
 
 
 import ir.bki.endpoints.ShortenerEndPoint;
+import ir.bki.filters.basicauth.BasicAuthNeededFilter;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -22,6 +23,7 @@ public class CreateServlet extends Application {
     }
 
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(BasicAuthNeededFilter.class);
         resources.add(ShortenerEndPoint.class);
     }
 }

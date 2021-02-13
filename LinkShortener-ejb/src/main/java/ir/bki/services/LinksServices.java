@@ -35,12 +35,12 @@ public class LinksServices {
         DateTime dateTime = parser.parseDateTime(linkDto.getExpiresDate());
         links.setRedirectLink(linkDto.getLongLink());
         links.setExpiresDate(dateTime.toDate());
-        links.setHttpStatusCode(303);
+        links.setHttpStatusCode(201);
         links.setEnabled(true);
         Links response = linksDao.create(links);
         String encodedLink = baseConversion.encode(response.getId());
-        if (linkDto.getDesirelink() != null) {
-            encodedLink = linkDto.getDesirelink();
+        if (linkDto.getDesiredlink() != null) {
+            encodedLink = linkDto.getDesiredlink();
         }
         links.setShortLink(encodedLink);
         return linksDao.getEm().merge(links);
@@ -77,5 +77,10 @@ public class LinksServices {
         } catch (Exception ignored) {
         }
         return res;
+    }
+
+    public boolean isExpired(Links links) {
+        DateTime second = new DateTime(links.getExpiresDate());
+        return second.isBeforeNow();
     }
 }
